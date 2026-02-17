@@ -31,6 +31,37 @@ async function run() {
     const usersCollection = database.collection("users");
 
 
+    // update data route
+    app.put("/users/:id", async(req, res) => {
+        const id = req.params.id;
+        const user = req.body; 
+        console.log("update request for:", id, user);
+
+        const filter = {_id: new ObjectId(id)};
+        const options = {upsert: true}; // jodi data na thake tahole notun kore shuru korbe
+
+        const updatedUser = {
+          $set: {
+            name: user.name,
+            email: user.email
+          }
+        }
+
+        const result = await usersCollection.updateOne(filter, updatedUser, options);
+        res.send(result)
+    })
+
+    // single user data pawa
+    app.get("/users/:id", async(req, res) => {
+      const id = req.params.id;  // 1.url theke id nilam
+
+      const query = {_id: new ObjectId(id)}; // 2.id take mongodb format a convert korlam
+
+      const user = await usersCollection.findOne(query);  //3. shudu akjon ke khoja
+
+      res.send(user); //4. data pathano
+    })
+
     app.get("/users", async(req, res) => {
       const cursor = usersCollection.find();
       const result = await cursor.toArray();

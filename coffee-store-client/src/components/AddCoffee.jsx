@@ -1,14 +1,35 @@
 import React from "react";
+import Swal from "sweetalert2";
 
 const AddCoffee = () => {
-
   const handleAddCoffee = (e) => {
     e.preventDefault();
     const form = e.target;
     const formData = new FormData(form);
-    const coffeeData = Object.fromEntries(formData.entries())
-    console.log(coffeeData);
-  }
+    const newCoffee = Object.fromEntries(formData.entries());
+    console.log(newCoffee);
+
+    //send coffee data to the db
+    fetch("http://localhost:3000/coffees", {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify(newCoffee),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+
+        Swal.fire({
+          title: "Coffee Added",
+          text: "Coffee Added Successfully",
+          icon: "success",
+        });
+      });
+
+      form.res
+  };
 
   return (
     <div className="p-24">
@@ -51,12 +72,12 @@ const AddCoffee = () => {
               />
             </fieldset>
             <fieldset className="fieldset bg-base-200 border-base-300 rounded-box border p-4">
-              <label className="label">Taste</label>
+              <label className="label">Price</label>
               <input
                 type="text"
-                name="taste"
+                name="Price"
                 className="input w-full"
-                placeholder="Coffee taste"
+                placeholder="Coffee Price"
               />
             </fieldset>
             <fieldset className="fieldset bg-base-200 border-base-300 rounded-box border p-4">
@@ -88,8 +109,8 @@ const AddCoffee = () => {
               placeholder="Photo Url"
             />
           </fieldset>
-          
-          <input type="submit" className="btn w-full" value="Add coffee"/>
+
+          <input type="submit" className="btn w-full" value="Add coffee" />
         </form>
       </div>
     </div>

@@ -28,7 +28,7 @@ const AddCoffee = () => {
         });
       });
 
-      form.res
+      form.reset()
   };
 
   return (

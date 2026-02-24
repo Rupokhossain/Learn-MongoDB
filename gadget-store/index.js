@@ -41,18 +41,37 @@ async function run() {
       res.send(result);
     });
 
-    app.put("/gadgets/:id", async(req, res) => {
-        const id = req.params.id;
-        const filter = {_id: new ObjectId(id)}
-        const options = { upsert: true };
-        const updatedGadget = req.body;
-        const updateDoc = {
-            $set: updatedGadget
-        }
+    app.get("/gadgets/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = {_id: new ObjectId(id)};
+      const result = await gadgetCollection.findOne(query);
+      res.send(result)
+    });
 
-        const result = await gadgetCollection.updateOne(filter, updateDoc, options)
+    app.put("/gadgets/:id", async (req, res) => {
+      const id = req.params.id;
+      const filter = { _id: new ObjectId(id) };
+      const options = { upsert: true };
+      const updatedGadget = req.body;
+      const updateDoc = {
+        $set: updatedGadget,
+      };
 
-        res.send(result);
+      const result = await gadgetCollection.updateOne(
+        filter,
+        updateDoc,
+        options,
+      );
+
+      res.send(result);
+    });
+
+
+    app.delete("gadgets/:id", async(req, res) => {
+          const id = req.params.id;
+          const query = {_id: new ObjectId(id)};
+          const result = await gadgetCollection.deleteOne(query);
+          res.send(result);
     })
 
     // Send a ping to confirm a successful connection

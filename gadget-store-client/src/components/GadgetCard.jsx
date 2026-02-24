@@ -1,8 +1,22 @@
 import React from "react";
 import { Link } from "react-router";
 
-const GadgetCard = ({ gadget }) => {
+const GadgetCard = ({ gadget, gadgets, setGadgets }) => {
   const { _id, name, quantity, price, photo } = gadget;
+
+  const handledelete = (_id) => {
+    fetch(`http://localhost:3000/coffees/${_id}`, {
+      method: "DELETE",
+    })
+    .then((res) => res.json())
+    .then((data) => {
+      console.log(data);
+
+      //remove gadget from state
+      const remainingGadgets = gadgets.filter(gad => gad._id !== _id);
+      setGadgets(remainingGadgets)
+    })
+  }
 
   return (
     <div className="card card-side bg-base-100 shadow-sm border">
@@ -24,7 +38,7 @@ const GadgetCard = ({ gadget }) => {
             <Link to={`/updateGadget/${_id}`}>
               <button className="btn join-item">Edit</button>
             </Link>
-            <button className="btn join-item">Delete</button>
+            <button onClick={() => handledelete(_id)} className="btn join-item">Delete</button>
           </div>
         </div>
       </div>
